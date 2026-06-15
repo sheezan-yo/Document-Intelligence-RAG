@@ -409,7 +409,7 @@ export default function Home() {
                         {msg.citations.map((c: any, i: number) => (
                           <div key={i} className="bg-zinc-800 rounded-xl p-2">
                             <img
-                              src={`http://localhost:8000/image?path=${encodeURIComponent(
+                              src={`${API_URL}/image?path=${encodeURIComponent(
                                 c.image_page,
                               )}`}
                               onClick={() => setSelectedImage(c.image_page)}
@@ -476,7 +476,7 @@ export default function Home() {
           onClick={() => setSelectedImage("")}
         >
           <img
-            src={`http://localhost:8000/image?path=${encodeURIComponent(
+            src={`${API_URL}/image?path=${encodeURIComponent(
               selectedImage,
             )}`}
             className="max-w-[90vw] max-h-[90vh] rounded-xl"
