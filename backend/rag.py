@@ -89,7 +89,7 @@ def add_document(pages, filename):
             f"No text extracted from {filename}"
         )
         
-    embeddings = get_embedding_model.encode(
+    embeddings = get_embedding_model().encode(
         documents
     ).tolist()
         
@@ -103,7 +103,7 @@ def add_document(pages, filename):
     statusMod.status_by_file[filename] = "Indexed"
         
 def search(query):
-    query_embedding = get_embedding_model.encode(
+    query_embedding = get_embedding_model().encode(
         query
     ).tolist()
     
