@@ -44,7 +44,7 @@ def clasify_document(text, filename):
     
     # response = model.generate_content(prompt)
     response = client.chat.completions.create(
-        model="openrouter/owl-alpha",
+        model= "openrouter/owl-alpha",
         response_format={"type":"json_object"},
         messages=[
             {

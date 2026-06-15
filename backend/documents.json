@@ -1,14 +1,1 @@
-[
-  {
-    "filename": "BFAI_AI_Engineer_Assessment.pdf",
-    "pages": 2,
-    "classification": {
-      "document_type": "assessment",
-      "topic": "AI engineering internship project involving document intelligence and agentic RAG system",
-      "sensitivity": "public",
-      "contains_tables": false,
-      "contains_images": false,
-      "summary": "A take-home assessment for an AI Engineer Intern position at ZOO, requiring candidates to build a full-stack web application that parses messy real-world documents (scanned PDFs, handwritten pages, image-heavy reports), classifies them using an LLM, and powers an agentic RAG chatbot with grounded citations. The project must include a bulk upload page, multi-turn chat with page thumbnail citations, and security considerations across all layers. Stack: Python backend, Next.js frontend, free/open-source libraries. 3-day deadline with GitHub repo and deployed link required."
-    }
-  }
-]
+[]

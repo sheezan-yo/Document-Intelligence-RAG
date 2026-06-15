@@ -63,6 +63,59 @@ def load_documents():
 def save_documents(documents):
     with open(DOC_FILE, "w") as f:
         json.dump(documents, f, indent=2)
+        
+def process_document(filepath: str, filename: str):
+    if filename.endswith(".pdf"):
+        pages = parserMod.parse_pdf(filepath)
+    elif filename.endswith((".jpg", ".jpeg", ".png")):
+        pages = parserMod.parse_image(filepath)
+    elif filename.endswith(".txt"):
+        pages = parserMod.parse_text(filepath)
+    else:
+        raise HTTPException(
+            status_code=400,
+            detail="Unsupported file type"
+        )
+
+    if not any(page["text"].strip() for page in pages):
+        raise HTTPException(
+            status_code=400,
+            detail="No readable text found in document"
+        )
+
+    parserMod.save_parsed_document(filename, pages)
+
+    full_text = "\n".join(
+        page["text"] for page in pages
+    )
+
+    classification = classifyMod.clasify_document(
+        full_text,
+        filename
+    )
+
+    ragMod.add_document(
+        pages,
+        filename
+    )
+
+    statusMod.status_by_file[filename] = "Completed"
+
+    documents = load_documents()
+
+    documents.append({
+        "filename": filename,
+        "pages": len(pages),
+        "classification": classification
+    })
+
+    save_documents(documents)
+
+    return {
+        "filename": filename,
+        "pages": len(pages),
+        "classification": classification
+    }
 
 @app.get("/")
 def home():
@@ -89,56 +142,9 @@ async def Upload_file(file: UploadFile = File(...)):
     with open(filepath, "wb") as f:
         f.write(contents)
         
-    if file.filename.endswith(".pdf"):
-        pages = parserMod.parse_pdf(filepath)
-    elif file.filename.endswith((".jpg", ".jpeg", ".png")):
-        pages = parserMod.parse_image(filepath)
-    elif file.filename.endswith(".txt"):
-        pages = parserMod.parse_text(filepath)
-    else:
-        raise HTTPException(
-            status_code=400,
-            detail="Unsupported file type"
-        )
-        
-    if not any(
-        page["text"].strip()
-        for page in pages
-    ):
-        raise HTTPException(
-            status_code=400,
-            detail="No readable text found in document"
-        )
-    
-    parserMod.save_parsed_document(file.filename, pages)
-    
-    full_text = "\n".join(
-        page["text"] for page in pages
+    return process_document(
+        filepath, file.filename
     )
-    
-    classification = classifyMod.clasify_document(full_text, file.filename)
-    
-    ragMod.add_document(
-        pages, file.filename
-    )
-    
-    statusMod.status_by_file[file.filename] = "Completed"
-
-    documents = load_documents()
-    
-    documents.append({
-        "filename": file.filename,
-        "pages": len(pages),
-        "classification": classification
-    })
-    
-    save_documents(documents)
-    
-    return {
-        "filename": file.filename,
-        "pages": len(pages),
-        "classification": classification
-    }
     
 @app.get("/search")
 def search_doc(q: str):
