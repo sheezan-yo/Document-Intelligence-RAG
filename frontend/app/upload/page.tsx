@@ -8,6 +8,9 @@ import { FiUploadCloud } from "react-icons/fi";
 import Link from "next/link";
 
 export default function UploadPage() {
+  const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
   const [uploads, setUploads] = useState<any[]>([]);
   const [documents, setDocuments] = useState<any[]>([]);
 
@@ -27,11 +30,11 @@ export default function UploadPage() {
       form.append("file", file);
 
       try {
-        await axios.post("http://localhost:8000/upload", form);
+        await axios.post(`${API_URL}/upload`, form);
 
         const interval = setInterval(async () => {
           const res = await axios.get(
-            `http://localhost:8000/status/${file.name}`,
+            `${API_URL}/status/${file.name}`,
           );
 
           setUploads((prev) =>
@@ -67,7 +70,7 @@ export default function UploadPage() {
 
   const loadDocuments = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/documents");
+      const res = await axios.get(`${API_URL}/documents`);
 
       setDocuments(res.data);
     } catch (error) {
@@ -78,7 +81,7 @@ export default function UploadPage() {
   const deleteDocument = async (filename: string) => {
     try {
       await axios.delete(
-        `http://localhost:8000/documents/${encodeURIComponent(filename)}`,
+        `${API_URL}/documents/${encodeURIComponent(filename)}`,
       );
 
       setDocuments((prev) => prev.filter((doc) => doc.filename != filename));

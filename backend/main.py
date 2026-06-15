@@ -3,7 +3,6 @@ import json
 import fitz
 import shutil
 
-
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse

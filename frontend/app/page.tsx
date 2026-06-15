@@ -31,6 +31,9 @@ type Chat = {
 };
 
 export default function Home() {
+  const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
   const [citations, setCitations] = useState<any[]>([]);
@@ -141,7 +144,7 @@ export default function Home() {
 
     try {
       const recentHistory = currentChat?.messages.slice(-6) || [];
-      const res = await axios.post("http://localhost:8000/chat", {
+      const res = await axios.post(`${API_URL}/chat`, {
         question: userQuestion,
         history: recentHistory,
       });
@@ -189,7 +192,7 @@ export default function Home() {
 
   const getDocs = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/documents");
+      const res = await axios.get(`${API_URL}/documents`);
       setDocs(res.data);
     } catch (error) {
       console.error(error);
