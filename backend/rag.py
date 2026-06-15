@@ -25,9 +25,17 @@ collection = client.get_or_create_collection(
     name="documents"
 )
 
-embedding_model = SentenceTransformer(
-    "all-MiniLM-L6-v2"
-)
+embedding_model = None
+
+def get_embedding_model():
+    global embedding_model
+    
+    if embedding_model is None:
+        embedding_model = SentenceTransformer(
+            "all-MiniLM-L6-v2"
+        )
+    
+    return embedding_model
 
 def add_document(pages, filename):
     statusMod.status_by_file[filename] = "Indexing"
@@ -75,7 +83,7 @@ def add_document(pages, filename):
             f"No text extracted from {filename}"
         )
         
-    embeddings = embedding_model.encode(
+    embeddings = get_embedding_model.encode(
         documents
     ).tolist()
         
@@ -89,7 +97,7 @@ def add_document(pages, filename):
     statusMod.status_by_file[filename] = "Indexed"
         
 def search(query):
-    query_embedding = embedding_model.encode(
+    query_embedding = get_embedding_model.encode(
         query
     ).tolist()
     
