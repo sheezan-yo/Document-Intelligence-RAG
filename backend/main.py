@@ -17,6 +17,8 @@ import classifier as classifyMod
 import rag as ragMod
 import status as statusMod
 
+print("MAIN STARTED")
+
 app = FastAPI()
 
 app.add_middleware(

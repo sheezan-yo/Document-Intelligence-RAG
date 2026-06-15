@@ -14,13 +14,17 @@ load_dotenv()
 # )
 # model = genai.GenerativeModel("gemini-2.5-flash")
 
+print("RAG MODULE IMPORTED")
+
 openaiClient = OpenAI(
     api_key=os.getenv("OPENROUTER_API_KEY"),
     base_url="https://openrouter.ai/api/v1"
 )
 
+print("CREATING CHROMA CLIENT")
 client = chromadb.PersistentClient(path="chroma_db")
 
+print("CREATING COLLECTION")
 collection = client.get_or_create_collection(
     name="documents"
 )
@@ -36,6 +40,8 @@ def get_embedding_model():
         )
     
     return embedding_model
+
+print("BEFORE SENTENCE TRANSFORMER")
 
 def add_document(pages, filename):
     statusMod.status_by_file[filename] = "Indexing"
